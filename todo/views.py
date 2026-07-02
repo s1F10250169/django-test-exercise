@@ -1,4 +1,5 @@
 from django.shortcuts import render,redirect
+from django.shortcuts import render, redirect
 from django.http import Http404
 from django.utils.timezone import make_aware
 from django.utils.dateparse import parse_datetime
@@ -33,6 +34,7 @@ def detail(request, task_id):
     return render(request, 'todo/detail.html', context)
 
 def update(request, task_id):
+def delete(request, task_id):
     try:
         task = Task.objects.get(pk=task_id)
     except Task.DoesNotExist:
@@ -48,3 +50,5 @@ def update(request, task_id):
         'task': task,
     }
     return render(request, 'todo/edit.html', context)
+    task.delete()
+    return redirect(index)
