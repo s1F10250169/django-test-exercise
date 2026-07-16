@@ -25,9 +25,9 @@
       <div>
         <label for="priorityInput">Priority:</label><br>
         <select id="priorityInput" name="priority">
-          <option value="high">最優先</option>
-          <option value="medium">優先</option>
-          <option value="low" selected>非優先</option>
+          <option value="high" {% if priority == 'high' %}selected{% endif %}>最優先</option>
+          <option value="medium" {% if priority == 'medium' %}selected{% endif %}>優先</option>
+          <option value="low" {% if priority == 'low' %}selected{% endif %}>非優先</option>
         </select>
       </div>
       <div>
