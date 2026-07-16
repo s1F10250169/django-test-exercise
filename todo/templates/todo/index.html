@@ -23,6 +23,14 @@
         <input id="dueInput" name="due_at" type="datetime-local">
       </div>
       <div>
+        <label for="priorityInput">Priority:</label><br>
+        <select id="priorityInput" name="priority">
+          <option value="high">最優先</option>
+          <option value="medium">優先</option>
+          <option value="low" selected>非優先</option>
+        </select>
+      </div>
+      <div>
         <button type="submit">Submit</button>
       </div>
     </form>
@@ -33,15 +41,24 @@
       <a href="{% url 'index' %}?order=post">Sort by Posted Date</a>
     </div>
 
-    {% for task in tasks %}
+    {% for item in tasks_with_priority %}
     <div class="text">
-      <h2><a href="{% url 'detail' task.id %}">{{ task.title }}</a></h2>
-      <ul>
-        <li>Posted at: {{ task.posted_at }}</li>
-        {% if task.due_at %} 
-        <li>Due at: {{ task.due_at }}</li>
+      <div class="task-header">
+        {% if item.priority == 'high' %}
+          <span class="priority-label priority-high"></span>
+        {% elif item.priority == 'medium' %}
+          <span class="priority-label priority-medium"></span>
+        {% else %}
+          <span class="priority-label priority-low"></span>
         {% endif %}
-        {% if task.completed %} 
+        <h2><a href="{% url 'detail' item.task.id %}">{{ item.task.title }}</a></h2>
+      </div>
+      <ul>
+        <li>Posted at: {{ item.task.posted_at }}</li>
+        {% if item.task.due_at %} 
+        <li>Due at: {{ item.task.due_at }}</li>
+        {% endif %}
+        {% if item.task.completed %} 
         <li>Status: Completed</li>
         {% else %}
         <li>Status: Not Completed</li>

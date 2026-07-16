@@ -48,6 +48,63 @@ button:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
+/* 優先度ラベルを追加 */
+.task-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.priority-label {
+  width: 6px;
+  height: 24px;
+  display: inline-block;
+  border-radius: 2px;
+  margin-right: 0.5rem;
+}
+
+.priority-high {
+  background-color: #e74c3c;
+}
+
+.priority-medium {
+  background-color: #f39c12;
+}
+
+.priority-low {
+  background-color: #27ae60;
+}
+
+.priority-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.priority-badge.priority-high {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.priority-badge.priority-medium {
+  background-color: #f39c12;
+  color: white;
+}
+
+.priority-badge.priority-low {
+  background-color: #27ae60;
+  color: white;
+}
+
+select {
+  padding: 0.5rem;
+  margin-top: 0.25rem;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
 .text {
   background: #fff;
   padding: 1rem;
