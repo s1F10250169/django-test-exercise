@@ -1,4 +1,3 @@
-from django.shortcuts import render,redirect
 from django.shortcuts import render, redirect
 from django.http import Http404
 from django.utils.timezone import make_aware
@@ -6,10 +5,20 @@ from django.utils.dateparse import parse_datetime
 from todo.models import Task
 
 # Create your views here.
+
+def parse_due_at(value):
+    if value:
+        dt = parse_datetime(value)
+        return make_aware(dt) if dt else None
+    return None
+
 def index(request):
     if request.method == 'POST':
-        task = Task(title=request.POST['title'],
-                    due_at=make_aware(parse_datetime(request.POST['due_at'])))
+        due_at_value = request.POST.get('due_at')
+        task = Task(
+            title=request.POST['title'],
+            due_at=parse_due_at(due_at_value)
+        )
         task.save()
     
     if request.GET.get('order') == 'due':
@@ -40,8 +49,9 @@ def update(request, task_id):
     except Task.DoesNotExist:
         raise Http404("Task does not exist")
     if request.method == 'POST':
+        due_at_value = request.POST.get('due_at')
         task.title = request.POST['title']
-        task.due_at = make_aware(parse_datetime(request.POST['due_at']))
+        task.due_at = parse_due_at(due_at_value)
         task.save()
         return redirect('detail', task.id)
 
@@ -56,7 +66,7 @@ def delete(request, task_id):
     except Task.DoesNotExist:
         raise Http404("Task does not exist")
     task.delete()
-    return redirect(index)
+    return redirect('index')
   
 def close(request, task_id):
     try:
