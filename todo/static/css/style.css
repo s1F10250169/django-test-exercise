@@ -124,3 +124,10 @@ a:hover {
   color: #1f5f87;
   transform: translateY(-1px);
 }
+
+.overdue {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  font-weight: bold;
+  border-left: 4px solid #ef4444;
+}

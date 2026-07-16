@@ -2,6 +2,7 @@ from django.test import TestCase, Client
 from django.utils import timezone
 from datetime import datetime
 from todo.models import Task
+import datetime as dt
 
 # Create your tests here.
 class SampleTestCase(TestCase):
@@ -51,14 +52,24 @@ class TaskModelTestCase(TestCase):
 
         self.assertFalse(task.is_overdue(current))
 
+    def test_is_overdue_without_arguments(self):
+        past_time = timezone.now() - dt.timedelta(days=1)
+        task_past = Task(title="過去のタスク", due_at=past_time)
+        self.assertTrue(task_past.is_overdue())
+
+        future_time = timezone.now() + dt.timedelta(days=1)
+        task_future = Task(title="未来のタスク", due_at=future_time)
+        self.assertFalse(task_future.is_overdue())
+
+
 class TodoViewTestCase(TestCase):
     def test_index_get(self):
         client = Client()
         response = client.get('/')
         
-        self.assertEqual(response. status_code, 200)
-        self.assertEqual(response. templates[0].name, 'todo/index.html')
-        self.assertEqual(len(response.context[ 'tasks' ]), 0)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.templates[0].name, 'todo/index.html')
+        self.assertEqual(len(response.context['tasks']), 0)
     
     def test_index_post(self):
         client = Client()
@@ -67,7 +78,7 @@ class TodoViewTestCase(TestCase):
         
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.templates[0].name, 'todo/index.html')
-        self.assertEqual(len(response.context['tasks' ]), 1)
+        self.assertEqual(len(response.context['tasks']), 1)
 
     def test_index_get_order_post(self):
         task1 = Task(title='task1', due_at=timezone.make_aware(datetime(2024, 7, 1)))
@@ -170,7 +181,7 @@ class TodoViewTestCase(TestCase):
         task.refresh_from_db()
         self.assertEqual(task.title, 'updated task')
         self.assertEqual(task.due_at, timezone.make_aware(datetime(2024, 8, 1, 12, 0, 0)))
-
+        
     def test_index_get_filter_active(self):
         active_task = Task(title='Active Task', due_at=timezone.make_aware(datetime(2024, 7, 1)))
         active_task.save()
@@ -187,3 +198,4 @@ class TodoViewTestCase(TestCase):
         self.assertEqual(len(response.context['tasks']), 1)
 
         self.assertEqual(response.context['tasks'][0], active_task)
+

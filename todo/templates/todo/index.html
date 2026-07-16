@@ -2,71 +2,63 @@
 <!DOCTYPE html>
 <html lang="ja">
 
-  <head>
-    <title>To Do Application</title>
-    <meta charset="UTF-8">
-    <meta name="author" content="INIAD">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-  </head>
+<head>
+  <title>To Do Application</title>
+  <meta charset="UTF-8">
+  <meta name="author" content="INIAD">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
 
-  <body>
-    <h1>Sample To Do Application</h1>
-    <p>You can submit tasks from the following form.</p>
-    <form action="{% url 'index' %}" method="post">
-      {% csrf_token %}
-      <div>
-        <label for="titleInput">Title</label><br>
-        <input id="titleInput" name="title" type="text" placeholder="Input title">
-      </div>
-      <div>
-        <label for="dueInput">Due at:</label><br>
-        <input id="dueInput" name="due_at" type="datetime-local">
-      </div>
-      <div>
-        <label for="priorityInput">Priority:</label><br>
-        <select id="priorityInput" name="priority">
-          <option value="high">最優先</option>
-          <option value="medium">優先</option>
-          <option value="low" selected>非優先</option>
-        </select>
-      </div>
-      <div>
-        <button type="submit">Submit</button>
-      </div>
-    </form>
-    <br>
-
+<body>
+  <h1>Sample To Do Application</h1>
+  <p>You can submit tasks from the following form.</p>
+  <form action="{% url 'index' %}" method="post">
+    {% csrf_token %}
     <div>
-      <a href="{% url 'index' %}?order=due">Sort by Due Date</a> |
-      <a href="{% url 'index' %}?order=post">Sort by Posted Date</a> |
-      <a href="{% url 'index' %}?filter=active">Show Only Active Tasks</a>
+      <label for="titleInput">Title</label><br>
+      <input id="titleInput" name="title" type="text" placeholder="Input title">
     </div>
+    <div>
+      <label for="dueInput">Due at:</label><br>
+      <input id="dueInput" name="due_at" type="datetime-local">
+    </div>
+    <div>
+      <label for="priorityInput">Priority:</label><br>
+      <select id="priorityInput" name="priority">
+        <option value="high">最優先</option>
+        <option value="medium">優先</option>
+        <option value="low" selected>非優先</option>
+      </select>
+    </div>
+    <div>
+      <button type="submit">Submit</button>
+    </div>
+  </form>
 
-    {% for item in tasks_with_priority %}
-    <div class="text">
-      <div class="task-header">
-        {% if item.priority == 'high' %}
-          <span class="priority-label priority-high"></span>
-        {% elif item.priority == 'medium' %}
-          <span class="priority-label priority-medium"></span>
-        {% else %}
-          <span class="priority-label priority-low"></span>
-        {% endif %}
-        <h2><a href="{% url 'detail' item.task.id %}">{{ item.task.title }}</a></h2>
-      </div>
+  <div>
+    <a href="{% url 'index' %}?order=due">Sort by Due Date</a> |
+    <a href="{% url 'index' %}?order=post">Sort by Posted Date</a>
+  </div>
+
+  {% for task in tasks %}
+    <div class="text {% if task.is_overdue %}overdue{% endif %}">
+      <h2><a href="{% url 'detail' task.id %}">{{ task.title }}</a></h2>
       <ul>
-        <li>Posted at: {{ item.task.posted_at }}</li>
-        {% if item.task.due_at %} 
-        <li>Due at: {{ item.task.due_at }}</li>
+        <li>Posted at: {{ task.posted_at }}</li>
+        {% if task.due_at %}
+          <li>Due at: {{ task.due_at }}</li>
         {% endif %}
-        {% if item.task.completed %} 
-        <li>Status: Completed</li>
+        {% if task.completed %}
+          <li>Status: Completed</li>
         {% else %}
-        <li>Status: Not Completed</li>
+          <li>Status: Not Completed</li>
         {% endif %}
       </ul>
     </div>
-    {% endfor %}
-  </body>
+  {% empty %}
+    <p>No tasks.</p>
+  {% endfor %}
+
+</body>
 
 </html>
