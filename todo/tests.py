@@ -74,7 +74,7 @@ class TodoViewTestCase(TestCase):
     def test_index_post(self):
         client = Client()
         # Use datetime format with time component to match form expectations
-        data = {'title': 'Test Task', 'due_at': '2024-06-30T00:00:00'}
+        data = {'title': 'Test Task', 'due_at': '2024-06-30 00:00:00'}
         response = client.post('/', data)
 
         self.assertEqual(response.status_code, 200)
