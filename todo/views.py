@@ -11,17 +11,22 @@ def index(request):
         task = Task(title=request.POST['title'],
                     due_at=make_aware(parse_datetime(request.POST['due_at'])))
         task.save()
-        # セッションに優先度を保存
+
+    # セッションに優先度を保存
         priority = request.POST.get('priority', 'low')
         if 'task_priorities' not in request.session:
             request.session['task_priorities'] = {}
         request.session['task_priorities'][str(task.id)] = priority
         request.session.modified = True
-    
+
+    tasks = Task.objects.all()  
+    if request.GET.get('filter') == 'active':
+        tasks = tasks.filter(completed=False)
+
     if request.GET.get('order') == 'due':
-        tasks = Task.objects.order_by('due_at')
+        tasks = tasks.order_by('due_at')
     else:
-        tasks = Task.objects.order_by('-posted_at')
+        tasks = tasks.order_by('-posted_at')
     
     # タスク情報に優先度を追加
     task_priorities = request.session.get('task_priorities', {})
