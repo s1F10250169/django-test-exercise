@@ -73,13 +73,14 @@ class TodoViewTestCase(TestCase):
     
     def test_index_post(self):
         client = Client()
-        # Option 1: Use a simpler date format if your form accepts it
-        data = {'title': 'Test Task', 'due_at': '2024-06-30'}
+        # Use datetime format with time component to match form expectations
+        data = {'title': 'Test Task', 'due_at': '2024-06-30 00:00:00'}
         response = client.post('/', data)
-    
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.templates[0].name, 'todo/index.html')
         self.assertEqual(len(response.context['tasks']), 1)
+
 
     def test_index_get_order_post(self):
         task1 = Task(title='task1', due_at=timezone.make_aware(datetime(2024, 7, 1)))
