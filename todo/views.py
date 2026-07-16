@@ -18,10 +18,11 @@ def index(request):
             request.session['task_priorities'] = {}
         request.session['task_priorities'][str(task.id)] = priority
         request.session.modified = True
-    
+
     tasks = Task.objects.all()  
     if request.GET.get('filter') == 'active':
         tasks = tasks.filter(completed=False)
+
     if request.GET.get('order') == 'due':
         tasks = tasks.order_by('due_at')
     else:
