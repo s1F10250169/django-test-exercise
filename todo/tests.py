@@ -75,7 +75,7 @@ class TodoViewTestCase(TestCase):
         client = Client()
         # Use datetime format with time component to match form expectations
         data = {'title': 'Test Task', 'due_at': '2024-06-30 00:00:00'}
-        response = client.post('/', data)
+        response = client.post('/', data, follow=True)
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.templates[0].name, 'todo/index.html')
