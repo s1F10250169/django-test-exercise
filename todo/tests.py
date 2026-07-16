@@ -182,3 +182,20 @@ class TodoViewTestCase(TestCase):
         self.assertEqual(task.title, 'updated task')
         self.assertEqual(task.due_at, timezone.make_aware(datetime(2024, 8, 1, 12, 0, 0)))
         
+    def test_index_get_filter_active(self):
+        active_task = Task(title='Active Task', due_at=timezone.make_aware(datetime(2024, 7, 1)))
+        active_task.save()
+
+        completed_task = Task(title='Completed Task', due_at=timezone.make_aware(datetime(2024, 7, 2)), completed=True)
+        completed_task.save()
+
+        client = Client()
+        response = client.get('/?filter=active')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.templates[0].name, 'todo/index.html')
+
+        self.assertEqual(len(response.context['tasks']), 1)
+
+        self.assertEqual(response.context['tasks'][0], active_task)
+
