@@ -39,6 +39,7 @@ def index(request):
         tasks_with_priority.append({'task': task, 'priority': priority})
 
     context = {
+        'tasks': tasks,
         'tasks_with_priority': tasks_with_priority,
     }
     return render(request, 'todo/index.html', context)
