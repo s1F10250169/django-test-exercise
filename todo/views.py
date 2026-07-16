@@ -13,11 +13,11 @@ def index(request):
         task.save()
 
     # セッションに優先度を保存
-    priority = request.POST.get('priority', 'low')
-    if 'task_priorities' not in request.session:
-        request.session['task_priorities'] = {}
-    request.session['task_priorities'][str(task.id)] = priority
-    request.session.modified = True
+        priority = request.POST.get('priority', 'low')
+        if 'task_priorities' not in request.session:
+            request.session['task_priorities'] = {}
+        request.session['task_priorities'][str(task.id)] = priority
+        request.session.modified = True
     
     tasks = Task.objects.all()  
     if request.GET.get('filter') == 'active':
